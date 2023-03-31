@@ -22,12 +22,12 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     if len(username) == 0 or len(password) == 0:
-        return "Вы не ввели логин или пароль!"
-    try:
-        cursor.execute("SELECT * FROM service.users WHERE login='%s'" %(str(username)))
-        records = list(cursor.fetchall())
-        if records[0][3] != password:
-            return "Неверный пароль"
-        return render_template('account.html', full_name=records[0][1], login=records[0][2], password=records[0][3])
-    except:
-        return "Пользователь не найден"
+        return render_template('login.html', exeption="Вы не ввели логин или пароль!")
+    cursor.execute("SELECT * FROM service.users WHERE login='%s'" % (str(username)))
+
+    records = list(cursor.fetchall())
+    if len(records)==0:
+        return render_template('login.html', exeption="Пользователь не найден")
+    if records[0][3] != password:
+        return render_template('login.html', exeption="Неверный пароль")
+    return render_template('account.html', full_name=records[0][1], login=records[0][2], password=records[0][3])
